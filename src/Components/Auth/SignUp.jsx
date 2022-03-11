@@ -2,9 +2,11 @@ import React, { useState, useContext } from 'react'
 import {Link, useNavigate } from 'react-router-dom'
 import Input from '../Input';
 import client from './axiosAuth';
-import {Auth} from '../../store/Auth/Auth.Context'
+import { Auth } from '../../store/Auth/Auth.Context'
+import { SIGN_UP } from '../../store/Auth/authReducer';
 
 function SignUp() {
+  const [state, dispatch] = useContext( Auth )
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -13,7 +15,10 @@ function SignUp() {
     phone: "",
   })
 
-  const { changeHandler } = useContext( Auth )
+  const changeHandler = (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
 
   const navigate = useNavigate()
 
@@ -23,8 +28,13 @@ function SignUp() {
     try {
       const response = await client.post('/sign-up', data)
       if(response.status === 200) {
-        localStorage.setItem('user', JSON.stringify(response.payload));
+        dispatch({
+          type: SIGN_UP, 
+          payload: response.data.payload
+        })
+        
         navigate('/')
+        console.log(response.data)
       }
     }
     catch(error){

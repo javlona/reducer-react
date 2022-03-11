@@ -1,19 +1,24 @@
-import React, { createContext } from "react";
+import React, { createContext, useReducer } from "react";
+import reducer from './authReducer'
 
 const Auth = createContext();
 
+const initialState = {
+  user: {},
+  isAuthenticated: false,
+  token: null,
+}
+
 function AuthContext(props) {
-  
-    const changeHandler = (e) => {
-        const { name, value } = e.target;
-        setData({ ...data, [name]: value });
-    };
+
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
     <Auth.Provider
-      value={{
-        changeHandler,
-      }}
+      value={[
+        state,
+        dispatch
+      ]}
     >
       {props.children}
     </Auth.Provider>

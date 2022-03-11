@@ -6,21 +6,18 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import SignIn from './Components/Auth/SignIn';
 import SignUp from './Components/Auth/SignUp';
 import Header from './Components/Header';
+import { Auth } from './store/Auth/Auth.Context';
 
-function App() {
-  const [state, dispatch] = useContext(Users)
- 
-  const isUser = localStorage.getItem('user')
-
-  if(isUser) {
+function App() { 
+  const [state, dispatch] = useContext( Auth )
+  
+  if(state.isAuthenticated) {
     return (
       <div>
         <Header></Header>
         <Routes>
           <Route path='/' element={ <h3>Home Page</h3> } />
           <Route path='users' element={ <UsersList/> } />
-          <Route path='/sign-in' element={ <SignIn /> } />
-          <Route path='/sign-up' element={ <SignUp /> } />
         </Routes>
       </div>
     )
